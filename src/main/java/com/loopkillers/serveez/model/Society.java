@@ -8,28 +8,12 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Society", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"society_name"}, name = "uk_society_name")})
+        @UniqueConstraint(columnNames = {"name"}, name = "uk_society_name")})
 public class Society {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    @JsonProperty("id")
     private long mId;
-
-    @Column(name = "society_name", nullable = false)
-    @JsonProperty("society_name")
     private String mName;
-
-    @Column(name = "address", nullable = false)
-    @JsonProperty("address")
     private String mAddress;
-
-    @Column(name = "latitude", nullable = false)
-    @JsonProperty("latitude")
     private BigDecimal mLatitude;
-
-    @Column(name = "longitude", nullable = false)
-    @JsonProperty("longitude")
     private BigDecimal mLongitude;
 
     public Society() {
@@ -43,27 +27,34 @@ public class Society {
         mLongitude = longitude;
     }
 
-    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    @JsonProperty("id")
     public long getId() {
         return mId;
     }
 
-    @JsonIgnore
+    @Column(name = "name", nullable = false)
+    @JsonProperty("name")
     public String getName() {
         return mName;
     }
 
-    @JsonIgnore
+    @Column(name = "address", nullable = false)
+    @JsonProperty("address")
     public String getAddress() {
         return mAddress;
     }
 
-    @JsonIgnore
+    @Column(name = "latitude", nullable = false)
+    @JsonProperty("latitude")
     public BigDecimal getLatitude() {
         return mLatitude;
     }
 
-    @JsonIgnore
+    @Column(name = "longitude", nullable = false)
+    @JsonProperty("longitude")
     public BigDecimal getLongitude() {
         return mLongitude;
     }

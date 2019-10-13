@@ -34,8 +34,8 @@ public class SocietyService {
         mSocietyRepository.delete(society);
     }
 
-    public void updateSociety(Society society) {
-        Society dbSociety = mSocietyRepository.findById(society.getId()).orElse(null);
+    public void updateSociety(long societyId, Society society) {
+        Society dbSociety = mSocietyRepository.findById(societyId).orElse(null);
         if (dbSociety == null) {
             throw new ResourceNotFoundException(String.format("Society with ID = %s does not exist", society.getId()));
         }
