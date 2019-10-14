@@ -22,12 +22,7 @@ public class HouseService {
         return mHouseRepository.findBySocietyId(societyId);
     }
 
-    public void createHouse(Long societyId, House house) {
-        Society society = mSocietyRepository.findById(societyId).orElse(null);
-        if (society == null) {
-            throw new ResourceNotFoundException(String.format("SocietyId %s not found", societyId));
-        }
-        house.setSociety(society);
+    private void saveHouse(House house) {
         try {
             mHouseRepository.save(house);
         } catch (DataIntegrityViolationException ex) {
@@ -35,10 +30,19 @@ public class HouseService {
             if (exceptionMsg.contains("uk_block_house_num_society_id")) {
                 exceptionMsg = String.format(
                         "House with details = (%s, %s, %s) already exist",
-                        house.getBlock(), house.getHouseNum(), societyId);
+                        house.getBlock(), house.getHouseNum(), house.getSociety().getId());
             }
             throw new DataValidationException(exceptionMsg);
         }
+    }
+
+    public void createHouse(Long societyId, House house) {
+        Society society = mSocietyRepository.findById(societyId).orElse(null);
+        if (society == null) {
+            throw new ResourceNotFoundException(String.format("SocietyId %s not found", societyId));
+        }
+        house.setSociety(society);
+        saveHouse(house);
     }
 
     public void deleteHouse(Long houseId, Long societyId) {
@@ -58,10 +62,6 @@ public class HouseService {
         }
         dbHouse.setBlock(house.getBlock());
         dbHouse.setHouseNum(house.getHouseNum());
-        try {
-            mHouseRepository.save(dbHouse);
-        } catch (DataIntegrityViolationException ex) {
-            throw new DataValidationException(ex.getMostSpecificCause().getMessage());
-        }
+        saveHouse(dbHouse);
     }
 }
