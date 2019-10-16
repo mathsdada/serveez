@@ -1,8 +1,11 @@
 package com.loopkillers.serveez.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Service", uniqueConstraints = {
@@ -11,6 +14,7 @@ public class Service {
     private long mId;
     private String mName;
     private String mImageUrl;
+    private Set<Society> mSocieties = new HashSet<>();
 
     public Service() {
     }
@@ -51,5 +55,23 @@ public class Service {
 
     public void setImageUrl(String imageUrl) {
         mImageUrl = imageUrl;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "services")
+    @JsonIgnore
+    public Set<Society> getSocieties() {
+        return mSocieties;
+    }
+
+    public void setSocieties(Set<Society> societies) {
+        mSocieties = societies;
+    }
+
+    public void addSociety(Society society) {
+        mSocieties.add(society);
+    }
+
+    public void removeSociety(Society society) {
+        mSocieties.remove(society);
     }
 }

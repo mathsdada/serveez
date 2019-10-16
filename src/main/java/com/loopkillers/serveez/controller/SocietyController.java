@@ -1,6 +1,7 @@
 package com.loopkillers.serveez.controller;
 
 import com.loopkillers.serveez.model.ApiResponse;
+import com.loopkillers.serveez.model.Service;
 import com.loopkillers.serveez.model.Society;
 import com.loopkillers.serveez.service.SocietyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,25 @@ public class SocietyController {
                                                      @RequestBody Society society) {
         mSocietyService.updateSociety(societyId, society);
         return new ResponseEntity<>(new ApiResponse("Society updated successfully"), new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @GetMapping("/societies/{societyId}/services")
+    public ResponseEntity<Object> getSocietyServices(@PathVariable(name = "societyId") Long societyId) {
+        List<Service> services = mSocietyService.getSocietyServices(societyId);
+        return new ResponseEntity<>(services, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @PutMapping("/societies/{societyId}/services/{serviceId}")
+    public ResponseEntity<ApiResponse> addSocietyService(@PathVariable(name = "societyId") Long societyId,
+                                                         @PathVariable(name = "serviceId") Long serviceId) {
+        mSocietyService.addRemoveService(societyId, serviceId, true);
+        return new ResponseEntity<>(new ApiResponse("Society Service added successfully"), new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/societies/{societyId}/services/{serviceId}")
+    public ResponseEntity<ApiResponse> deleteSocietyService(@PathVariable(name = "societyId") Long societyId,
+                                                            @PathVariable(name = "serviceId") Long serviceId) {
+        mSocietyService.addRemoveService(societyId, serviceId, false);
+        return new ResponseEntity<>(new ApiResponse("Society Service removed successfully"), new HttpHeaders(), HttpStatus.OK);
     }
 }

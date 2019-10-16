@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Society", uniqueConstraints = {
@@ -15,6 +17,7 @@ public class Society {
     private String mAddress;
     private BigDecimal mLatitude;
     private BigDecimal mLongitude;
+    private Set<Service> mServices = new HashSet<>();
 
     public Society() {
     }
@@ -77,5 +80,28 @@ public class Society {
 
     public void setLongitude(BigDecimal longitude) {
         mLongitude = longitude;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "SocietyServices",
+            joinColumns = {@JoinColumn(name = "society_id")},
+            inverseJoinColumns = {@JoinColumn(name = "service_id")})
+    @JsonIgnore
+    public Set<Service> getServices() {
+        return mServices;
+    }
+
+    public void setServices(Set<Service> services) {
+        mServices = services;
+    }
+
+    public void addService(Service service) {
+        mServices.add(service);
+        service.addSociety(this);
+    }
+
+    public void removeService(Service service) {
+        mServices.remove(service);
+        service.removeSociety(this);
     }
 }
