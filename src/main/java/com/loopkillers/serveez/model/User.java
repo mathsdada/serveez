@@ -1,27 +1,32 @@
 package com.loopkillers.serveez.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class User {
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email"}, name = "uk_email_address"),
+        @UniqueConstraint(columnNames = {"phone_num"}, name = "uk_phone_number")
+})
+public class User extends AuditModel {
     private long mId;
     private String mName;
-    private String mImageUrl;
+    private String mEmail;
     private String mPhoneNum;
-    private Date mJoinDate;
-    private String mUserType; /* CUSTOMER, MAID, MASTER */
 
     public User() {
     }
 
-    public User(long id, String name, String imageUrl, String phoneNum, Date joinDate, String userType) {
+    public User(long id, String name, String email, String phoneNum) {
         mId = id;
         mName = name;
-        mImageUrl = imageUrl;
+        mEmail = email;
         mPhoneNum = phoneNum;
-        mJoinDate = joinDate;
-        mUserType = userType;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long getId() {
         return mId;
     }
@@ -30,6 +35,8 @@ public class User {
         mId = id;
     }
 
+    @Column(name = "name", nullable = false)
+    @JsonProperty("name")
     public String getName() {
         return mName;
     }
@@ -38,35 +45,23 @@ public class User {
         mName = name;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    @Column(name = "email")
+    @JsonProperty("email")
+    public String getEmail() {
+        return mEmail;
     }
 
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
+    public void setEmail(String email) {
+        mEmail = email;
     }
 
+    @Column(name = "phone_num", nullable = false)
+    @JsonProperty("phone_num")
     public String getPhoneNum() {
         return mPhoneNum;
     }
 
     public void setPhoneNum(String phoneNum) {
         mPhoneNum = phoneNum;
-    }
-
-    public Date getJoinDate() {
-        return mJoinDate;
-    }
-
-    public void setJoinDate(Date joinDate) {
-        mJoinDate = joinDate;
-    }
-
-    public String getUserType() {
-        return mUserType;
-    }
-
-    public void setUserType(String userType) {
-        mUserType = userType;
     }
 }
