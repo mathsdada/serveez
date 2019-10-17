@@ -1,8 +1,11 @@
 package com.loopkillers.serveez.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -14,6 +17,7 @@ public class User extends AuditModel {
     private String mName;
     private String mEmail;
     private String mPhoneNum;
+    private Set<House> mHouses = new HashSet<>();
 
     public User() {
     }
@@ -63,5 +67,28 @@ public class User extends AuditModel {
 
     public void setPhoneNum(String phoneNum) {
         mPhoneNum = phoneNum;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "user_house",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "house_id")})
+    @JsonIgnore
+    public Set<House> getHouses() {
+        return mHouses;
+    }
+
+    public void addHouse(House house) {
+        mHouses.add(house);
+        house.addUser(this);
+    }
+
+    public void removeHouse(House house) {
+        mHouses.remove(house);
+        house.removeUser(this);
+    }
+
+    public void setHouses(Set<House> houses) {
+        mHouses = houses;
     }
 }

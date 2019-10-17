@@ -1,6 +1,7 @@
 package com.loopkillers.serveez.controller;
 
 import com.loopkillers.serveez.model.ApiResponse;
+import com.loopkillers.serveez.model.House;
 import com.loopkillers.serveez.model.User;
 import com.loopkillers.serveez.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,25 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@PathVariable(name = "userId") Long userId) {
         mUserService.deleteUser(userId);
         return new ResponseEntity<>(new ApiResponse("User deleted successfully"), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}/houses")
+    public ResponseEntity<Object> getUserHouses(@PathVariable(name = "userId") Long userId) {
+        List<House> houseList = mUserService.getUserHouses(userId);
+        return new ResponseEntity<>(houseList, HttpStatus.OK);
+    }
+
+    @PutMapping("/users/{userId}/houses/{houseId}")
+    public ResponseEntity<Object> addUserHouse(@PathVariable(name = "userId") Long userId,
+                                                @PathVariable(name = "houseId") Long houseId) {
+        mUserService.addRemoveUserHouse(userId, houseId, true);
+        return new ResponseEntity<>(new ApiResponse("User House Added Successfully"), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/users/{userId}/houses/{houseId}")
+    public ResponseEntity<Object> deleteUserHouse(@PathVariable(name = "userId") Long userId,
+                                               @PathVariable(name = "houseId") Long houseId) {
+        mUserService.addRemoveUserHouse(userId, houseId, false);
+        return new ResponseEntity<>(new ApiResponse("User House Deleted Successfully"), HttpStatus.OK);
     }
 }

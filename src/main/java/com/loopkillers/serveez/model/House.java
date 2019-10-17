@@ -6,6 +6,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "House", uniqueConstraints = {
@@ -16,6 +18,7 @@ public class House {
     private String mBlock;
     private String mHouseNum;
     private Society mSociety;
+    private Set<User> mUsers = new HashSet<>();
 
     public House() {
     }
@@ -68,5 +71,23 @@ public class House {
 
     public void setSociety(Society society) {
         mSociety = society;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "houses")
+    @JsonIgnore
+    public Set<User> getUsers() {
+        return mUsers;
+    }
+
+    public void addUser(User user) {
+        mUsers.add(user);
+    }
+
+    public void removeUser(User user) {
+        mUsers.remove(user);
+    }
+
+    public void setUsers(Set<User> users) {
+        mUsers = users;
     }
 }
