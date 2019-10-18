@@ -17,16 +17,18 @@ public class User extends AuditModel {
     private String mName;
     private String mEmail;
     private String mPhoneNum;
+    private UserType mUserType;
     private Set<House> mHouses = new HashSet<>();
 
     public User() {
     }
 
-    public User(long id, String name, String email, String phoneNum) {
+    public User(long id, String name, String email, String phoneNum, UserType userType) {
         mId = id;
         mName = name;
         mEmail = email;
         mPhoneNum = phoneNum;
+        mUserType = userType;
     }
 
     @Id
@@ -90,5 +92,16 @@ public class User extends AuditModel {
 
     public void setHouses(Set<House> houses) {
         mHouses = houses;
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_type", nullable = false)
+    @JsonProperty("user_type")
+    public UserType getUserType() {
+        return mUserType;
+    }
+
+    public void setUserType(UserType userType) {
+        mUserType = userType;
     }
 }
