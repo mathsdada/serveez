@@ -19,6 +19,7 @@ public class User extends AuditModel {
     private String mPhoneNum;
     private UserType mUserType;
     private Set<House> mHouses = new HashSet<>();
+    private Set<MaidTimeSlot> mTimeSlot = new HashSet<>();
 
     public User() {
     }
@@ -103,5 +104,14 @@ public class User extends AuditModel {
 
     public void setUserType(UserType userType) {
         mUserType = userType;
+    }
+
+    @OneToMany(mappedBy = "timeSlot")
+    public Set<MaidTimeSlot> getTimeSlot() {
+        return mTimeSlot;
+    }
+
+    public void setTimeSlot(Set<MaidTimeSlot> timeSlot) {
+        mTimeSlot = timeSlot;
     }
 }

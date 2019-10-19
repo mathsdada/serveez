@@ -19,7 +19,7 @@ public class UserService {
     @Autowired
     private HouseRepository mHouseRepository;
 
-    private void saveUser(User user) {
+    public void saveUser(User user) {
         try {
             mUserRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
